@@ -2,10 +2,12 @@ package com.lynx.homework_l17;
 
 import android.app.Activity;
 import android.os.Bundle;
-
+import android.widget.TextView;
 
 
 public class MainActivity extends Activity {
+
+    TextView tvText_AM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
