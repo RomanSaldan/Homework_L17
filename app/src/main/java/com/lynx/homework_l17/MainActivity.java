@@ -13,7 +13,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // TODO some code
+
+        tvText_AM = (TextView) findViewById(R.id.tvText_AM);
+        tvText_AM.setText("Hello GitHub!");
     }
 
 }
