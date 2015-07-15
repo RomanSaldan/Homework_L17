@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         tvText_AM = (TextView) findViewById(R.id.tvText_AM);
-        tvText_AM.setText("This string was changed");
+        tvText_AM.setText("This string was changed. And commit was done from git terminal");
     }
 
 }
