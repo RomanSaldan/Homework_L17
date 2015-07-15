@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         tvText_AM = (TextView) findViewById(R.id.tvText_AM);
-        tvText_AM.setText("Hello GitHub!");
+        tvText_AM.setText("This string was changed");
     }
 
 }
