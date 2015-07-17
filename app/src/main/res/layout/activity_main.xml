@@ -14,7 +14,7 @@
             android:id="@+id/btnZoomIn_AM"
             android:src="@drawable/background_btn_zoom_in"
             android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
 
@@ -22,11 +22,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnZoomOut_AM"
-            android:layout_above="@+id/btnZoomIn_AM"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:src="@drawable/background_btn_zoom_out"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:layout_below="@+id/btnZoomIn_AM"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLocation_AM"
+        android:src="@drawable/background_btn_location"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"/>
 
 
 </RelativeLayout>
