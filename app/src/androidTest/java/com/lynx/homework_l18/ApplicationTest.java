@@ -1,4 +1,4 @@
-package com.lynx.homework_l17;
+package com.lynx.homework_l18;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
