@@ -9,6 +9,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -24,12 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, View.OnClickListener, DialogInterface.OnClickListener {
+public class MainActivity extends Activity implements OnMapReadyCallback, View.OnClickListener, DialogInterface.OnClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mGoogleMap;
     private ImageButton btnZoomIn_AM;
     private ImageButton btnZoomOut_AM;
     private ImageButton btnLocation_AM;
+    private ImageButton btnClean_AM;
 
     private List<LatLng> markersList;
     private SharedPreferences sharedPreferences;
@@ -82,15 +85,18 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         btnZoomIn_AM = (ImageButton) findViewById(R.id.btnZoomIn_AM);
         btnZoomOut_AM = (ImageButton) findViewById(R.id.btnZoomOut_AM);
         btnLocation_AM = (ImageButton) findViewById(R.id.btnLocation_AM);
+        btnClean_AM = (ImageButton) findViewById(R.id.btnClean_AM);
         btnZoomIn_AM.setOnClickListener(this);
         btnZoomOut_AM.setOnClickListener(this);
         btnLocation_AM.setOnClickListener(this);
+        btnClean_AM.setOnClickListener(this);
     }
 
     /*Initialize Google API map*/
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.googleMapFragment);
         mapFragment.getMapAsync(this);
+        mapFragment.setRetainInstance(true);
     }
 
     /*Prepare simple marker*/
@@ -99,7 +105,8 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         marker  .title("Marker title")
                 .position(_position)
                 .snippet("My custom marker")
-                .icon(BitmapDescriptorFactory.defaultMarker());
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker));
+
         return marker;
     }
 
@@ -143,7 +150,9 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         if(mGoogleMap == null) return;
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mGoogleMap.setOnMapClickListener(this);
+        mGoogleMap.setOnMapLongClickListener(this);
+        mGoogleMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
+        mGoogleMap.setOnInfoWindowClickListener(this);
         loadMarkers();
     }
 
@@ -163,13 +172,12 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                     e.printStackTrace();
                 }
                 break;
+            case R.id.btnClean_AM:
+                mGoogleMap.clear();
+                markersList.clear();
+                sharedPreferences.edit().clear().commit();
+                break;
         }
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-        mGoogleMap.addMarker(prepareMarker(latLng));
-        markersList.add(latLng);
     }
 
     @Override
@@ -179,5 +187,16 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
                 dialog.dismiss();
                 break;
         }
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        mGoogleMap.addMarker(prepareMarker(latLng));
+        markersList.add(latLng);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
     }
 }
