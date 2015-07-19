@@ -47,7 +47,6 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
 
         initUI();
         initMap();
-
     }
 
     @Override
@@ -82,14 +81,14 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
 
     /*Initialize UI (views, listeners, etc)*/
     private void initUI() {
-        btnZoomIn_AM = (ImageButton) findViewById(R.id.btnZoomIn_AM);
-        btnZoomOut_AM = (ImageButton) findViewById(R.id.btnZoomOut_AM);
-        btnLocation_AM = (ImageButton) findViewById(R.id.btnLocation_AM);
-        btnClean_AM = (ImageButton) findViewById(R.id.btnClean_AM);
-        btnZoomIn_AM.setOnClickListener(this);
-        btnZoomOut_AM.setOnClickListener(this);
-        btnLocation_AM.setOnClickListener(this);
-        btnClean_AM.setOnClickListener(this);
+        btnZoomIn_AM        = (ImageButton) findViewById(R.id.btnZoomIn_AM);
+        btnZoomOut_AM       = (ImageButton) findViewById(R.id.btnZoomOut_AM);
+        btnLocation_AM      = (ImageButton) findViewById(R.id.btnLocation_AM);
+        btnClean_AM         = (ImageButton) findViewById(R.id.btnClean_AM);
+        btnZoomIn_AM    .setOnClickListener(this);
+        btnZoomOut_AM   .setOnClickListener(this);
+        btnLocation_AM  .setOnClickListener(this);
+        btnClean_AM     .setOnClickListener(this);
     }
 
     /*Initialize Google API map*/
@@ -197,6 +196,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(this, "Clicked!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Clicked! =" + marker.getId(), Toast.LENGTH_SHORT).show();
+
     }
 }
