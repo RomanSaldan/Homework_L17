@@ -5,6 +5,4 @@ package com.lynx.homework_l18.global;
  */
 public class Constants {
 
-    public static final int CONNECTION_TIMEOUT = 10000;
-
 }

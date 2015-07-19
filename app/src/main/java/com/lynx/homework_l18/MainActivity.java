@@ -2,6 +2,8 @@ package com.lynx.homework_l18;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -18,23 +20,61 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, View.OnClickListener {
+public class MainActivity extends Activity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, View.OnClickListener, DialogInterface.OnClickListener {
 
     private GoogleMap mGoogleMap;
     private ImageButton btnZoomIn_AM;
     private ImageButton btnZoomOut_AM;
     private ImageButton btnLocation_AM;
 
+    private List<LatLng> markersList;
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        markersList = new ArrayList<>();
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+
         initUI();
         initMap();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveMarkers();
+    }
+
+    /*Save markers to shared preferences*/
+    private void saveMarkers() {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if(markersList.size()>0) {
+            editor.putInt("size", markersList.size());
+            for(int i = 0; i < markersList.size(); i++) {
+                editor.putFloat("lat"+i, (float) markersList.get(i).latitude);
+                editor.putFloat("lng"+i, (float) markersList.get(i).longitude);
+            }
+            editor.commit();
+        }
+    }
+
+    /*Load markers from shared preferences*/
+    private void loadMarkers() {
+        int size = sharedPreferences.getInt("size", 0);
+        for (int i = 0; i < size; i++) {
+            double lat = (double) sharedPreferences.getFloat("lat" + i, 0);
+            double lng = (double) sharedPreferences.getFloat("lng" + i, 0);
+            mGoogleMap.addMarker(prepareMarker(new LatLng(lat, lng)));
+        }
     }
 
     /*Initialize UI (views, listeners, etc)*/
@@ -93,6 +133,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         adb.setTitle("Current location information: ")
                 .setMessage(_info)
                 .setIcon(R.drawable.background_btn_location)
+                .setPositiveButton("OK", this)
                 .show();
     }
 
@@ -103,6 +144,7 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mGoogleMap.setOnMapClickListener(this);
+        loadMarkers();
     }
 
     @Override
@@ -127,5 +169,15 @@ public class MainActivity extends Activity implements OnMapReadyCallback, Google
     @Override
     public void onMapClick(LatLng latLng) {
         mGoogleMap.addMarker(prepareMarker(latLng));
+        markersList.add(latLng);
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case DialogInterface.BUTTON_POSITIVE:
+                dialog.dismiss();
+                break;
+        }
     }
 }
