@@ -9,44 +9,31 @@
             android:name="com.google.android.gms.maps.MapFragment"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/BtnZoomInStyle"
             android:id="@+id/btnZoomIn_AM"
-            android:src="@drawable/background_btn_zoom_in"
-            android:background="@android:color/transparent"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/BtnZoomOutStyle"
             android:id="@+id/btnZoomOut_AM"
-            android:src="@drawable/background_btn_zoom_out"
-            android:background="@android:color/transparent"
             android:layout_below="@+id/btnZoomIn_AM"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BtnLocationStyle"
         android:id="@+id/btnLocation_AM"
-        android:src="@drawable/background_btn_location"
-        android:background="@android:color/transparent"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"/>
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/BtnCleanStyle"
         android:id="@+id/btnClean_AM"
-        android:src="@drawable/background_clean"
-        android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
-
 
 </RelativeLayout>

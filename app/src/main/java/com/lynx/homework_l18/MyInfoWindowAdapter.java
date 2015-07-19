@@ -28,10 +28,10 @@ public final class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public View getInfoContents(Marker marker) {
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.custom_marker_layout, null, false);
-        TextView tvTitle_CML = (TextView) view.findViewById(R.id.tvTitle_CML);
-        TextView tvDescription_CML = (TextView) view.findViewById(R.id.tvDescription_CML);
-        tvTitle_CML.setText("Title test");
-        tvDescription_CML.setText("Description text");
+        TextView tvTitle_CML        = (TextView) view.findViewById(R.id.tvTitle_CML);
+        TextView tvDescription_CML  = (TextView) view.findViewById(R.id.tvDescription_CML);
+        tvTitle_CML         .setText(mCtx.getString(R.string.marker_num) + marker.getId());
+        tvDescription_CML   .setText(mCtx.getString(R.string.marker_description));
         return view;
     }
 }

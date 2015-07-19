@@ -6,4 +6,10 @@
     <string name="dialog_msg_noaddress">No Address returned!</string>
     <string name="dialog_msg_title">"Current location information: "</string>
     <string name="dialog_msg_btn_ok">OK</string>
+    <string name="dialog_conn_err_title">Warning!</string>
+    <string name="dialog_conn_err_msg">You need internet connection for proper use this application</string>
+    <string name="dialog_conn_err_btn">OK</string>
+    <string name="dialog_gps_err_msg">You need installed GooglePlayServices (GoogleMaps) for use this soft</string>
+    <string name="marker_description">Marker description</string>
+    <string name="marker_num">Marker #</string>
 </resources>
