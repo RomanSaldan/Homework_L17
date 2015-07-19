@@ -3,4 +3,7 @@
 
     <string name="hello_world">My first commited change</string>
     <string name="action_settings">Settings</string>
+    <string name="dialog_msg_noaddress">No Address returned!</string>
+    <string name="dialog_msg_title">"Current location information: "</string>
+    <string name="dialog_msg_btn_ok">OK</string>
 </resources>

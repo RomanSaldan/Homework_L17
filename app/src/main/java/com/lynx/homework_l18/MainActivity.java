@@ -20,30 +20,31 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.lynx.homework_l18.global.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends Activity implements OnMapReadyCallback, View.OnClickListener, DialogInterface.OnClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
+public final class MainActivity extends Activity implements OnMapReadyCallback, View.OnClickListener, DialogInterface.OnClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnInfoWindowClickListener {
 
-    private GoogleMap mGoogleMap;
-    private ImageButton btnZoomIn_AM;
-    private ImageButton btnZoomOut_AM;
-    private ImageButton btnLocation_AM;
-    private ImageButton btnClean_AM;
+    private GoogleMap       mGoogleMap;
+    private ImageButton     btnZoomIn_AM;
+    private ImageButton     btnZoomOut_AM;
+    private ImageButton     btnLocation_AM;
+    private ImageButton     btnClean_AM;
 
-    private List<LatLng> markersList;
-    private SharedPreferences sharedPreferences;
+    private List<LatLng>        mMarkersList;
+    private SharedPreferences   mSharedPreferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle _savedInstanceState) {
+        super.onCreate(_savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        markersList = new ArrayList<>();
-        sharedPreferences = getPreferences(MODE_PRIVATE);
+        mMarkersList        = new ArrayList<>();
+        mSharedPreferences  = getPreferences(MODE_PRIVATE);
 
         initUI();
         initMap();
@@ -57,13 +58,13 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
 
     /*Save markers to shared preferences*/
     private void saveMarkers() {
-        sharedPreferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if(markersList.size()>0) {
-            editor.putInt("size", markersList.size());
-            for(int i = 0; i < markersList.size(); i++) {
-                editor.putFloat("lat"+i, (float) markersList.get(i).latitude);
-                editor.putFloat("lng"+i, (float) markersList.get(i).longitude);
+        mSharedPreferences                  = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor     = mSharedPreferences.edit();
+        if(mMarkersList.size()>0) {
+            editor.putInt(Constants.KEY_MARKERS_SIZE, mMarkersList.size());
+            for(int i = 0; i < mMarkersList.size(); i++) {
+                editor.putFloat(Constants.KEY_LATITUDE +i, (float) mMarkersList.get(i).latitude);
+                editor.putFloat(Constants.KEY_LONGITUDE +i, (float) mMarkersList.get(i).longitude);
             }
             editor.commit();
         }
@@ -71,10 +72,10 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
 
     /*Load markers from shared preferences*/
     private void loadMarkers() {
-        int size = sharedPreferences.getInt("size", 0);
+        int size = mSharedPreferences.getInt(Constants.KEY_MARKERS_SIZE, 0);
         for (int i = 0; i < size; i++) {
-            double lat = (double) sharedPreferences.getFloat("lat" + i, 0);
-            double lng = (double) sharedPreferences.getFloat("lng" + i, 0);
+            double lat = (double) mSharedPreferences.getFloat(Constants.KEY_LATITUDE + i, 0);
+            double lng = (double) mSharedPreferences.getFloat(Constants.KEY_LONGITUDE + i, 0);
             mGoogleMap.addMarker(prepareMarker(new LatLng(lat, lng)));
         }
     }
@@ -94,41 +95,37 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
     /*Initialize Google API map*/
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.googleMapFragment);
-        mapFragment.getMapAsync(this);
-        mapFragment.setRetainInstance(true);
+        mapFragment             .getMapAsync(this);
+        mapFragment             .setRetainInstance(true);
     }
 
     /*Prepare simple marker*/
     private MarkerOptions prepareMarker(LatLng _position) {
         MarkerOptions marker = new MarkerOptions();
-        marker  .title("Marker title")
-                .position(_position)
-                .snippet("My custom marker")
+        marker  .position(_position)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.custom_marker));
-
         return marker;
     }
 
     /*Get current location info*/
     private String getCurrentLocInfo() throws IOException {
-        LatLng current = mGoogleMap.getCameraPosition().target;
-        double latitude = current.latitude;
-        double longitude = current.longitude;
+        LatLng current      = mGoogleMap.getCameraPosition().target;
+        double latitude     = current.latitude;
+        double longitude    = current.longitude;
         Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+        List<Address> listOfAddresses;
+        geocoder            = new Geocoder(this, Locale.getDefault());
+        listOfAddresses     = geocoder.getFromLocation(latitude, longitude, 1);
 
         StringBuilder strReturnedAddress = new StringBuilder();
-        if(addresses != null && addresses.size()>0) {
-            Address returnedAddress = addresses.get(0);
+        if(listOfAddresses != null && listOfAddresses.size()>0) {
+            Address returnedAddress = listOfAddresses.get(0);
             for(int i = 0; i<=returnedAddress.getMaxAddressLineIndex(); i++) {
                 strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
             }
         }
         else {
-            strReturnedAddress.append("No Address returned!");
+            strReturnedAddress.append(getString(R.string.dialog_msg_noaddress));
         }
         return strReturnedAddress.toString();
     }
@@ -136,22 +133,22 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
     /*Show dialog with current location info*/
     private void showInfoDialog(String _info) {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle("Current location information: ")
+        adb.setTitle(getString(R.string.dialog_msg_title))
                 .setMessage(_info)
                 .setIcon(R.drawable.background_btn_location)
-                .setPositiveButton("OK", this)
+                .setPositiveButton(getString(R.string.dialog_msg_btn_ok), this)
                 .show();
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
+    public void onMapReady(GoogleMap _googleMap) {
+        mGoogleMap = _googleMap;
         if(mGoogleMap == null) return;
-        mGoogleMap.setMyLocationEnabled(true);
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mGoogleMap.setOnMapLongClickListener(this);
-        mGoogleMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
-        mGoogleMap.setOnInfoWindowClickListener(this);
+        mGoogleMap  .setMyLocationEnabled(true);
+        mGoogleMap  .setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap  .setOnMapLongClickListener(this);
+        mGoogleMap  .setInfoWindowAdapter(new MyInfoWindowAdapter(this));
+        mGoogleMap  .setOnInfoWindowClickListener(this);
         loadMarkers();
     }
 
@@ -172,31 +169,31 @@ public class MainActivity extends Activity implements OnMapReadyCallback, View.O
                 }
                 break;
             case R.id.btnClean_AM:
-                mGoogleMap.clear();
-                markersList.clear();
-                sharedPreferences.edit().clear().commit();
+                mGoogleMap          .clear();
+                mMarkersList        .clear();
+                mSharedPreferences  .edit().clear().commit();
                 break;
         }
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
-        switch (which) {
+    public void onClick(DialogInterface _dialog, int _which) {
+        switch (_which) {
             case DialogInterface.BUTTON_POSITIVE:
-                dialog.dismiss();
+                _dialog.dismiss();
                 break;
         }
     }
 
     @Override
-    public void onMapLongClick(LatLng latLng) {
-        mGoogleMap.addMarker(prepareMarker(latLng));
-        markersList.add(latLng);
+    public void onMapLongClick(LatLng _latLng) {
+        mGoogleMap      .addMarker(prepareMarker(_latLng));
+        mMarkersList    .add(_latLng);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(this, "Clicked! =" + marker.getId(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Clicked! =" + marker.getId(), Toast.LENGTH_SHORT).show();     // HERE !!!
 
     }
 }

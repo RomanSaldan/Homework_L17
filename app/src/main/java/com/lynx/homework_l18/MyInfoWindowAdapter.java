@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.Marker;
 /**
  * Created by WORK on 19.07.2015.
  */
-public class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public final class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context mCtx;
 
